@@ -289,8 +289,7 @@ class CLIP(nn.Module):
 
         self.vocab_size = vocab_size
         self.token_embedding = nn.Embedding(vocab_size, transformer_width)
-#         self.positional_embedding = nn.Parameter(torch.empty(self.context_length, transformer_width))
-        self.positional_embedding = nn.Parameter(torch.empty(1000, transformer_width))
+        self.positional_embedding = nn.Parameter(torch.empty(self.context_length, transformer_width))
         self.ln_final = LayerNorm(transformer_width)
 
         self.text_projection = nn.Parameter(torch.empty(transformer_width, embed_dim))
@@ -430,9 +429,9 @@ def build_model(state_dict: dict):
         context_length, vocab_size, transformer_width, transformer_heads, transformer_layers
     )
 
-    for key in ["input_resolution", "context_length", "vocab_size"]:
-        if key in state_dict:
-            del state_dict[key]
+#     for key in ["input_resolution", "context_length", "vocab_size"]:   ##mj
+#         if key in state_dict:  ##mj
+#             del state_dict[key]   #mj
 
     convert_weights(model)
     model.load_state_dict(state_dict)
