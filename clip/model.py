@@ -398,7 +398,7 @@ def convert_weights(model: nn.Module):
 
 
 def build_model(state_dict: dict):
-    global state_dict
+    
     vit = "visual.proj" in state_dict
 
     if vit:
