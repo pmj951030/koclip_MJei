@@ -398,7 +398,6 @@ def convert_weights(model: nn.Module):
 
 
 def build_model(state_dict: dict):
-    global state_dict
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -430,9 +429,9 @@ def build_model(state_dict: dict):
         context_length, vocab_size, transformer_width, transformer_heads, transformer_layers
     )
 
-    for key in ["input_resolution", "context_length", "vocab_size"]:   ##mj
-        if key in state_dict:  ##mj
-            del state_dict[key]   #mj
+    for key in ["input_resolution", "context_length", "vocab_size"]:
+        if key in state_dict:
+            del state_dict[key]
 
     convert_weights(model)
     model.load_state_dict(state_dict)
