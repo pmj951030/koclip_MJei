@@ -259,6 +259,7 @@ class CLIP(nn.Module):
         super().__init__()
 
         self.context_length = 1000 #context_length
+        context_length=1000
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
