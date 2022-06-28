@@ -258,7 +258,8 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
-        self.context_length = 1000 #context_length
+        self.context_length = context_length 
+#         self.context_length = 1000 #context_length
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
@@ -417,8 +418,8 @@ def build_model(state_dict: dict):
         image_resolution = output_width * 32
 
     embed_dim = state_dict["text_projection"].shape[1]
-#     context_length = state_dict["positional_embedding"].shape[0]
-    context_length = 1000
+    context_length = state_dict["positional_embedding"].shape[0]
+#     context_length = 1000
     vocab_size = state_dict["token_embedding.weight"].shape[0]
     transformer_width = state_dict["ln_final.weight"].shape[0]
     transformer_heads = transformer_width // 64
