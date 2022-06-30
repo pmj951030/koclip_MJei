@@ -381,7 +381,7 @@ class CLIP(nn.Module):
         len_text=len(text)
         
         out = kobert_model(input_ids = torch.tensor([text]),
-              attention_mask = torch.tensor([[1 for i in range(len_text)]]))
+              attention_mask = torch.tensor([[[1 for i in range(len_text)]]]))
         
         x=out.pooler_output
         
