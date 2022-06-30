@@ -271,7 +271,7 @@ class CLIP(nn.Module):
         super().__init__()
 
         self.context_length = context_length 
-#         self.context_length = 1000 #context_length
+
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
@@ -370,7 +370,7 @@ class CLIP(nn.Module):
 #         return x
 
     def encode_text(self, text):
-        x=ko_tokenizer.batch_encode_plus([text])
+        x=ko_tokenizer.batch_encode_plus(text)
         out = kobert_model(input_ids = torch.tensor(x['input_ids']),
               attention_mask = torch.tensor(x['attention_mask']))
 
@@ -438,7 +438,6 @@ def build_model(state_dict: dict):
 
     embed_dim = state_dict["text_projection"].shape[1]
     context_length = state_dict["positional_embedding"].shape[0]
-#     context_length = 1000
     vocab_size = state_dict["token_embedding.weight"].shape[0]
     transformer_width = state_dict["ln_final.weight"].shape[0]
     transformer_heads = transformer_width // 64
