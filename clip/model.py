@@ -11,7 +11,7 @@ try:
 except:
     from KoBertTokenizer_MJ import KoBertTokenizer ## MJei
     
-tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
+ko_tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -364,7 +364,7 @@ class CLIP(nn.Module):
 #         return x
 
     def encode_text(self, text):
-        x=tokenizer.encode(text)
+        x=self.ko_tokenizer.encode(text)
         return x
     
     def forward(self, image, text):
