@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name="clip",
     py_modules=["clip"],
-    version="1.163",
+    version="1.164",
     description="",
     author="OpenAI",
     packages=find_packages(exclude=["tests*"]),
