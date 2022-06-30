@@ -380,8 +380,8 @@ class CLIP(nn.Module):
     def encode_text(self, text):
         len_text=len(text)
         
-        out = kobert_model(input_ids = torch.tensor(text),
-              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32))
+        out = kobert_model(input_ids = torch.tensor(text).to(device),
+              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32).to(device))
         
         x=out.pooler_output
         
