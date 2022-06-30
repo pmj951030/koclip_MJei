@@ -270,7 +270,9 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
-        self.context_length = context_length 
+        self.context_length = context_length
+        self.ko_tokenizer = ko_tokenizer ## 추가
+        self.kobert_model = kobert_model ## 추가
 
 
         if isinstance(vision_layers, (tuple, list)):
@@ -370,7 +372,7 @@ class CLIP(nn.Module):
 #         return x
 
     def encode_text(self, text):
-        x=self.ko_tokenizer.batch_encode_plus(text)
+        x=self.ko_tokenizer.batch_encode_plus([text])
         out = kobert_model(input_ids = torch.tensor(x['input_ids']),
               attention_mask = torch.tensor(x['attention_mask']))
 
