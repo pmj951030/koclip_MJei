@@ -272,7 +272,6 @@ class CLIP(nn.Module):
 
         self.context_length = context_length
         self.ko_tokenizer = ko_tokenizer ## 추가
-        self.kobert_model = kobert_model ## 추가
 
 
         if isinstance(vision_layers, (tuple, list)):
