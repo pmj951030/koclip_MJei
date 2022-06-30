@@ -364,7 +364,7 @@ class CLIP(nn.Module):
 #         return x
 
     def encode_text(self, text):
-        x=self.tokenizer.encode(text)
+        x=tokenizer.encode(text)
         return x
     
     def forward(self, image, text):
