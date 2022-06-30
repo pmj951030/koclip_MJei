@@ -6,6 +6,18 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
+try:
+    from .KoBertTokenizer_MJ import KoBertTokenizer ## MJei
+except:
+    from KoBertTokenizer_MJ import KoBertTokenizer ## MJei
+    
+ko_tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
+
+
+from transformers import BertModel
+kobert_model = BertModel.from_pretrained('skt/kobert-base-v1')
+
+
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -258,8 +270,9 @@ class CLIP(nn.Module):
                  ):
         super().__init__()
 
-        self.context_length = 1000 #context_length
-        context_length=1000
+        self.context_length = context_length
+        self.ko_tokenizer = ko_tokenizer ## 추가
+
 
         if isinstance(vision_layers, (tuple, list)):
             vision_heads = vision_width * 32 // 64
@@ -342,21 +355,42 @@ class CLIP(nn.Module):
     def encode_image(self, image):
         return self.visual(image.type(self.dtype))
 
+#     def encode_text(self, text):
+#         x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
+
+#         x = x + self.positional_embedding.type(self.dtype)
+#         x = x.permute(1, 0, 2)  # NLD -> LND
+#         x = self.transformer(x)
+#         x = x.permute(1, 0, 2)  # LND -> NLD
+#         x = self.ln_final(x).type(self.dtype)
+
+#         # x.shape = [batch_size, n_ctx, transformer.width]
+#         # take features from the eot embedding (eot_token is the highest number in each sequence)
+#         x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection
+
+#         return x
+
+#     def encode_text(self, text):
+#         x=self.ko_tokenizer.batch_encode_plus([text])
+#         out = kobert_model(input_ids = torch.tensor(x['input_ids']),
+#               attention_mask = torch.tensor(x['attention_mask']))
+
+#         return out.pooler_output
+    
     def encode_text(self, text):
-        x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
-
-        x = x + self.positional_embedding.type(self.dtype)
-        x = x.permute(1, 0, 2)  # NLD -> LND
-        x = self.transformer(x)
-        x = x.permute(1, 0, 2)  # LND -> NLD
-        x = self.ln_final(x).type(self.dtype)
-
-        # x.shape = [batch_size, n_ctx, transformer.width]
-        # take features from the eot embedding (eot_token is the highest number in each sequence)
-        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection
+        device = "cuda:0" if torch.cuda.is_available() else "cpu" # If using GPU then use mixed precision training.
+        len_text=len(text)
+        
+        out = kobert_model(input_ids = torch.tensor(text).to('cpu'),
+              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32).to('cpu'))
+        
+        x=out.pooler_output.to(device)
+        
+        
+#         x=x[torch.arange(x.shape[0]), text.argmax(dim=-1)] 
 
         return x
-
+    
     def forward(self, image, text):
         image_features = self.encode_image(image)
         text_features = self.encode_text(text)
@@ -399,6 +433,7 @@ def convert_weights(model: nn.Module):
 
 
 def build_model(state_dict: dict):
+    
     vit = "visual.proj" in state_dict
 
     if vit:
@@ -417,8 +452,7 @@ def build_model(state_dict: dict):
         image_resolution = output_width * 32
 
     embed_dim = state_dict["text_projection"].shape[1]
-#     context_length = state_dict["positional_embedding"].shape[0]
-    context_length = 1000
+    context_length = state_dict["positional_embedding"].shape[0]
     vocab_size = state_dict["token_embedding.weight"].shape[0]
     transformer_width = state_dict["ln_final.weight"].shape[0]
     transformer_heads = transformer_width // 64
