@@ -372,8 +372,8 @@ class CLIP(nn.Module):
 
     def encode_text(self, text):
         x=self.ko_tokenizer.batch_encode_plus([text])
-        out = kobert_model(input_ids = torch.tensor(x['input_ids'][0]),
-              attention_mask = torch.tensor(x['attention_mask'][0]))
+        out = kobert_model(input_ids = torch.tensor(x['input_ids']),
+              attention_mask = torch.tensor(x['attention_mask']))
 
         return out.pooler_output
     
