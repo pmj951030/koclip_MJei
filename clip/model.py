@@ -370,10 +370,11 @@ class CLIP(nn.Module):
 #         return x
 
     def encode_text(self, text):
-        x = ko_tokenizer.batch_encode_plus(text)
-        out = model(input_ids = torch.tensor(x['input_ids']),
+        x=ko_tokenizer.batch_encode_plus([text])
+        out = kobert_model(input_ids = torch.tensor(x['input_ids']),
               attention_mask = torch.tensor(x['attention_mask']))
-        return out['pooler_output']
+
+        return out.pooler_output
     
     def forward(self, image, text):
         image_features = self.encode_image(image)
