@@ -382,8 +382,12 @@ class CLIP(nn.Module):
         
         out = kobert_model(input_ids = torch.tensor([text]),
               attention_mask = torch.tensor([[1 for i in range(len_text)]]))
+        
+        x=out.pooler_output
+        
+        x=x[torch.arange(x.shape[0]), inputs.argmax(dim=-1)] 
 
-        return out.pooler_output
+        return x
     
     def forward(self, image, text):
         image_features = self.encode_image(image)
