@@ -381,10 +381,10 @@ class CLIP(nn.Module):
         device = "cuda:0" if torch.cuda.is_available() else "cpu" # If using GPU then use mixed precision training.
         len_text=len(text)
         
-        out = kobert_model(input_ids = torch.tensor(text),#.to('cpu'),
-              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32))#.to('cpu'))
+        out = kobert_model(input_ids = torch.tensor(text).to('cuda:0'),#.to('cpu'),
+              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32)).to('cuda:0')#.to('cpu'))
         
-        x=out.pooler_output.to(device)
+        x=out.pooler_output.to('cuda:0')
         
         
 #         x=x[torch.arange(x.shape[0]), text.argmax(dim=-1)] 
