@@ -385,7 +385,7 @@ class CLIP(nn.Module):
         
         x=out.pooler_output
         
-        x=x[torch.arange(x.shape[0]), inputs.argmax(dim=-1)] 
+        x=x[torch.arange(x.shape[0]), text.argmax(dim=-1)] 
 
         return x
     
