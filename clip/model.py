@@ -378,6 +378,7 @@ class CLIP(nn.Module):
 #         return out.pooler_output
     
     def encode_text(self, text):
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
         len_text=len(text)
         
         out = kobert_model(input_ids = torch.tensor(text).to(device),
