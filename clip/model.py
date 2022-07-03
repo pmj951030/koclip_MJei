@@ -266,7 +266,9 @@ class CLIP(nn.Module):
                  vocab_size: int,
                  transformer_width: int,
                  transformer_heads: int,
-                 transformer_layers: int
+                 transformer_layers: int,
+                 
+                 
                  ):
         super().__init__()
 
@@ -294,17 +296,17 @@ class CLIP(nn.Module):
                 output_dim=embed_dim
             )
 
-#         self.transformer = Transformer(
-#             width=transformer_width,
-#             layers=transformer_layers,
-#             heads=transformer_heads,
-#             attn_mask=self.build_attention_mask()
-#         )
-        
-        
-        self.kor_transformer = kobert_model(
-            
+        self.transformer = Transformer(
+            width=transformer_width,
+            layers=transformer_layers,
+            heads=transformer_heads,
+            attn_mask=self.build_attention_mask()
         )
+        
+        
+#         self.kor_transformer = kobert_model(
+#             input_ids,attention_mask
+#         )
         
         self.fc_mj=nn.Linear(768,512)
         
