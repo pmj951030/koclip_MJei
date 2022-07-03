@@ -303,11 +303,7 @@ class CLIP(nn.Module):
         
         
         self.kor_transformer = kobert_model(
-            width=transformer_width,
-            layers=transformer_layers,
-            heads=transformer_heads,
-            attn_mask=self.build_attention_mask()
-
+            input_ids,attention_mask
         )
         
         self.fc_mj=nn.Linear(768,512)
