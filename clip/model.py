@@ -308,7 +308,7 @@ class CLIP(nn.Module):
 #             input_ids,attention_mask
 #         )
         
-        self.fc_mj=nn.Linear(768,512)
+        self.fc=nn.Linear(768,512)
         
 
         self.vocab_size = vocab_size
@@ -393,7 +393,7 @@ class CLIP(nn.Module):
         x=kobert_model(input_ids = torch.tensor(inputs['input_ids']),
                      attention_mask = torch.tensor(inputs['attention_mask'])).pooler_output
         
-        x=fc_mj(x)
+        x=fc(x)
         
 
 
