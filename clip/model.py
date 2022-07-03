@@ -294,12 +294,24 @@ class CLIP(nn.Module):
                 output_dim=embed_dim
             )
 
-        self.transformer = Transformer(
+#         self.transformer = Transformer(
+#             width=transformer_width,
+#             layers=transformer_layers,
+#             heads=transformer_heads,
+#             attn_mask=self.build_attention_mask()
+#         )
+        
+        
+        self.kor_transformer = kobert_model(
             width=transformer_width,
             layers=transformer_layers,
             heads=transformer_heads,
             attn_mask=self.build_attention_mask()
+
         )
+        
+        self.fc_mj=nn.Linear(768,512)
+        
 
         self.vocab_size = vocab_size
         self.token_embedding = nn.Embedding(vocab_size, transformer_width)
@@ -376,20 +388,19 @@ class CLIP(nn.Module):
 #               attention_mask = torch.tensor(x['attention_mask']))
 
 #         return out.pooler_output
-    
+
+
     def encode_text(self, text):
-        device = "cuda:0" if torch.cuda.is_available() else "cpu" # If using GPU then use mixed precision training.
-        len_text=len(text)
+        inputs = ko_tokenizer.batch_encode_plus([text])
+        x=kobert_model(input_ids = torch.tensor(inputs['input_ids']),
+                     attention_mask = torch.tensor(inputs['attention_mask'])).pooler_output
         
-        out = kobert_model(input_ids = torch.tensor(text).to('cuda:0'),#.to('cpu'),
-              attention_mask = torch.tensor([[1 for i in range(len_text)]],dtype=torch.int32)).to('cuda:0')#.to('cpu'))
+        x=fc_mj(x)
         
-        x=out.pooler_output.to('cuda:0')
-        
-        
-#         x=x[torch.arange(x.shape[0]), text.argmax(dim=-1)] 
+
 
         return x
+
     
     def forward(self, image, text):
         image_features = self.encode_image(image)
