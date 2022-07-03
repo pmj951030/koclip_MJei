@@ -303,7 +303,7 @@ class CLIP(nn.Module):
         
         
         self.kor_transformer = kobert_model(
-            *input_option
+            
         )
         
         self.fc_mj=nn.Linear(768,512)
