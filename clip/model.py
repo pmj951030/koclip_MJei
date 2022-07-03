@@ -274,6 +274,7 @@ class CLIP(nn.Module):
 
         self.context_length = context_length
         self.ko_tokenizer = ko_tokenizer ## 추가
+        self.fc=nn.Linear(768,512)
 
 
         if isinstance(vision_layers, (tuple, list)):
@@ -308,7 +309,7 @@ class CLIP(nn.Module):
 #             input_ids,attention_mask
 #         )
         
-        self.fc=nn.Linear(768,512)
+
         
 
         self.vocab_size = vocab_size
@@ -393,7 +394,7 @@ class CLIP(nn.Module):
         x=kobert_model(input_ids = torch.tensor(inputs['input_ids']),
                      attention_mask = torch.tensor(inputs['attention_mask'])).pooler_output
         
-        x=fc(x)
+        x=self.fc(x)
         
 
 
