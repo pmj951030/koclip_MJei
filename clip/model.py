@@ -308,7 +308,7 @@ class CLIP(nn.Module):
 #         )
         
 
-        self.transformer = get_kobert_model() ## 확정
+        self.kor_transformer = get_kobert_model() ## 확정
 
         
 
