@@ -274,6 +274,9 @@ class CLIP(nn.Module):
 
         self.context_length = context_length
         self.ko_tokenizer = ko_tokenizer ## 추가
+        
+        
+        
 #         self.fc=nn.Linear(768,512)
 
 
@@ -308,7 +311,7 @@ class CLIP(nn.Module):
 #         self.kor_transformer = kobert_model(
 #             input_ids,attention_mask
 #         )
-        
+        self.kor_transformer = get_kobert_model() ## 확정
 
         
 
@@ -390,9 +393,9 @@ class CLIP(nn.Module):
 
 
     def encode_text(self, text):
-        inputs = self.ko_tokenizer.batch_encode_plus([text])
-        x=kobert_model(input_ids = torch.tensor(inputs['input_ids'][0:1]),
-                     attention_mask = torch.tensor(inputs['attention_mask'][0:1])).pooler_output
+        inputs = self.ko_tokenizer.batch_encode_plus(text)
+        x=kobert_model(input_ids = torch.tensor(inputs['input_ids']),
+                     attention_mask = torch.tensor(inputs['attention_mask'])).pooler_output
         
         x= self.nn.Linear(768,512)(x)
         
