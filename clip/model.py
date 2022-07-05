@@ -300,15 +300,15 @@ class CLIP(nn.Module):
                 output_dim=embed_dim
             )
 
-#         self.transformer = Transformer(
-#             width=transformer_width,
-#             layers=transformer_layers,
-#             heads=transformer_heads,
-#             attn_mask=self.build_attention_mask()
-#         )
+        self.transformer = Transformer(
+            width=transformer_width,
+            layers=transformer_layers,
+            heads=transformer_heads,
+            attn_mask=self.build_attention_mask()
+        )
         
 
-        self.transformer = get_kobert_model() ## 확정
+        self.kor_transformer = get_kobert_model() ## 확정
 
         
 
