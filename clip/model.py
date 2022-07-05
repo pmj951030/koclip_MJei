@@ -17,7 +17,7 @@ ko_tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
 from transformers import BertModel
 kobert_model = BertModel.from_pretrained('skt/kobert-base-v1')
 
-
+from kobert_transformers import get_kobert_model
 
 class Bottleneck(nn.Module):
     expansion = 4
